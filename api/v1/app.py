@@ -7,6 +7,7 @@ import os
 
 app = Flask(__name__)
 
+app.url_map.strict_slashes = False
 app.register_blueprint(app_views, url_prefix='/api/v1')
 
 
@@ -16,6 +17,12 @@ def teardown_appcntext(exception):
 
 
 if __name__ == "__main__":
-    host = os.getenv('HBNB_API_HOST', '0.0.0.0')
-    port = int(os.getenv('HBNB_API_PORT', 5000))
-    app.run(host=host, port=port, threaded=True)
+    if getenv("HBNB_API_HOST") is None:
+        HBNB_API_HOST = '0.0.0.0'
+    else:
+        HBNB_API_HOST = getenv("HBNB_API_HOST")
+    if getenv("HBNB_API_PORT") is None:
+        HBNB_API_PORT = 5000
+    else:
+        HBNB_API_PORT = int(getenv("HBNB_API_PORT"))
+    app.run(host=HBNB_API_HOST, port=HBNB_API_PORT, threaded=True)
