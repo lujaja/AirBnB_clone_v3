@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+import models
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -70,38 +71,30 @@ class FileStorage:
         self.reload()
 
     def get(self, cls, id):
-        """ retrieves one object """
-        try:
-            obj_dict = {}
-            if cls:
-                obj_class = self.__session.query(self.CNC.get(cls)).all()
-                for item in obj_class:
-                    obj_dict[item.id] = item
-            return obj_dict[id]
-        except:
-            return None
+        '''
+        gets an object
+        Args:
+            cls (str): class name
+            id (str): object ID
+        Returns:
+            an object based on class name and its ID
+        '''
+        obj_dict = models.storage.all(cls)
+        for k, v in obj_dict.items():
+            matchstring = "{}.{}".format(cls, id)
+            if k == matchstring:
+                return v
+
+        return None
 
     def count(self, cls=None):
-        """Counts number of objects in storage
-
+        '''
+        counts number of objects of a class (if given)
         Args:
-            cls: optional string representing the class name
+            cls (str): class name
         Returns:
-            the number of objects in storage matching the given class name.
-
-            If no name is passed, returns the count of all objects in storage.
-        """
-        obj_dict = {}
-        if cls:
-            obj_class = self.__session.query(self.CNC.get(cls)).all()
-            for item in obj_class:
-                obj_dict[item.id] = item
-            return len(obj_dict)
-        else:
-            for cls_name in self.CNC:
-                if cls_name == 'BaseModel':
-                    continue
-                obj_class = self.__session.query(self.CNC.get(cls_name)).all()
-                for item in obj_class:
-                    obj_dict[item.id] = item
-            return len(obj_dict)
+            number of objects in class, if no class name given
+            return total number of objects in database
+        '''
+        obj_dict = models.storage.all(cls)
+        return len(obj_dict)

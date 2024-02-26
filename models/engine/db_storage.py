@@ -87,27 +87,31 @@ class DBStorage:
         except:
             return None
 
-    def count(self, cls=None):
-        """Counts number of objects in storage
-
+    def get(self, cls, id):
+        '''
+        gets an object
         Args:
-            cls: optional string representing the class name
+            cls (str): class name
+            id (str): object ID
         Returns:
-            the number of objects in storage matching the given class name.
+            an object based on class name and its ID
+        '''
+        obj_dict = models.storage.all(cls)
+        for k, v in obj_dict.items():
+            matchstring = "{}.{}".format(cls, id)
+            if k == matchstring:
+                return v
 
-            If no name is passed, returns the count of all objects in storage.
-        """
-        obj_dict = {}
-        if cls:
-            obj_class = self.__session.query(self.CNC.get(cls)).all()
-            for item in obj_class:
-                obj_dict[item.id] = item
-            return len(obj_dict)
-        else:
-            for cls_name in self.CNC:
-                if cls_name == 'BaseModel':
-                    continue
-                obj_class = self.__session.query(self.CNC.get(cls_name)).all()
-                for item in obj_class:
-                    obj_dict[item.id] = item
-            return len(obj_dict)
+        return None
+
+    def count(self, cls=None):
+        '''
+        counts number of objects of a class (if given)
+        Args:
+            cls (str): class name
+        Returns:
+            number of objects in class, if no class name given
+            return total number of objects in database
+        '''
+        obj_dict = models.storage.all(cls)
+        return len(obj_dict)
