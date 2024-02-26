@@ -1,4 +1,4 @@
-#/usr/bin/python3
+#!/usr/bin/python3
 """Status of an API"""
 from flask import Flask, make_response, jsonify
 from models import storage
@@ -9,7 +9,6 @@ app = Flask(__name__)
 
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views, url_prefix='/api/v1')
-
 
 
 @app.teardown_appcontext
