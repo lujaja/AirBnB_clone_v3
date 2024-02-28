@@ -12,7 +12,7 @@ import uuid
 @app_views.route('/states/<state_id>/cities', methods=['GET'])
 @app_views.route('/states/<state_id>/cities/', methods=['GET'])
 def list_cities_of_state(state_id):
-    '''Retrieves a list of all City objects'''
+    """Retrieves a list of all City objects"""
     all_states = storage.all("State").values()
     state_obj = [obj.to_dict() for obj in all_states if obj.id == state_id]
     if state_obj == []:
