@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""places"""
+"""places handles all default places api calls"""
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
